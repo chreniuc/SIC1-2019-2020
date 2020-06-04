@@ -59,13 +59,13 @@ main(int argc, char **argv) {
       inferior_limit = superior_limit;
     }
     
-    printf("[Master] All work has been distributed to the slaves. Waiting for results.\n")
+    printf("[Master] All work has been distributed to the slaves. Waiting for results.\n");
     int value_received;
     int number_of_vowels = 0;
     for(int i = 0; i < number_of_processes - 1; i++)
     {
       // Read results from slaves
-      MPI_Recv(value_received, 1, MPI_INT, MPI_ANY_SOURCE, 99, MPI_COMM_WORLD, &status);
+      MPI_Recv(&value_received, 1, MPI_INT, MPI_ANY_SOURCE, 99, MPI_COMM_WORLD, &status);
       printf("[Master] Received from a slave the number of vowels: %d\n", value_received);
       number_of_vowels = number_of_vowels + value_received;
     }
@@ -91,7 +91,7 @@ main(int argc, char **argv) {
       }
     }
     printf("[Slave: %d] Finished work. Number of vowels found: %d. Sending to master.\n",myrank, number_of_vowels);
-    MPI_Send(number_of_vowels , 1, MPI_CHAR, master_rank, 99, MPI_COMM_WORLD);
+    MPI_Send(&number_of_vowels , 1, MPI_INT, master_rank, 99, MPI_COMM_WORLD);
   }
   MPI_Finalize();
 }
